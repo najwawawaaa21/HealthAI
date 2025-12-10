@@ -1,0 +1,200 @@
+1. Fitur Utama (Core Features)
+
+Ini adalah fitur minimum yang harus ada agar sistem berfungsi.
+
+A. Input Data Pengguna
+
+Pengguna mengisi:
+
+Umur
+
+Jenis kelamin
+
+Berat badan saat ini
+
+Tinggi badan
+
+Aktivitas harian (sedentary, ringan, sedang, berat)
+
+Target: turun BB, naik BB, atau pertahankan BB
+
+Target berat badan & waktu capaian (opsional)
+
+B. Perhitungan Kebutuhan Kalori (BMR & TDEE)
+
+Sistem otomatis menghitung:
+
+BMR (Basal Metabolic Rate)
+
+TDEE (Total Daily Energy Expenditure)
+
+Kalori target berdasarkan tujuan:
+
+Turun BB: -300 sampai -500 kcal
+
+Naik BB: +300 sampai +500 kcal
+
+Pertahankan: TDEE
+
+C. Rekomendasi Rencana Harian
+
+Sistem menghasilkan:
+
+Rekomendasi jumlah kalori / hari
+
+Rekomendasi makronutrisi:
+
+Protein: 1.2 – 1.8 gr/kg
+
+Lemak: 20–30%
+
+Karbohidrat: sisa dari kalori harian
+
+D. Rekomendasi Makanan
+
+Minimal terdiri dari:
+
+10–20 menu makanan sederhana (database kecil)
+
+Rekomendasi makanan per kategori:
+
+Sarapan
+
+Makan siang
+
+Makan malam
+
+Camilan
+
+Ditampilkan nilai kalori per menu
+
+E. Rekomendasi Aktivitas / Olahraga
+
+Minimal:
+
+Jogging
+
+Jalan cepat
+
+Bersepeda
+
+Workout ringan
+
+Sistem menampilkan:
+
+Durasi yang disarankan
+
+Kalori yang dibakar perkiraan
+
+F. Halaman Ringkasan (Dashboard)
+
+Setelah hitung, tampilkan:
+
+Kalori harian yang dibutuhkan
+
+Target harian (defisit/surplus)
+
+Rekomendasi makanan
+
+Rekomendasi olahraga
+
+Grafik sederhana (opsional)
+
+🖥️ 2. Arsitektur MVP
+Frontend
+
+HTML, CSS, JS
+
+Atau Laravel Blade jika pakai Laravel
+
+Form input dan hasil perhitungan
+
+Backend
+
+Laravel / PHP
+
+Python (jika mau model ML) — opsional untuk MVP
+
+Database
+
+Minimal 2 tabel:
+
+Users
+
+Food Menu
+
+Activity List
+
+🧠 3. Algoritma Kecerdasan (Sistem Cerdas)
+
+Untuk MVP, gunakan rules sederhana:
+
+Rule-Based Recommendation
+
+Contoh:
+
+Jika tujuan = turun BB → kalori = TDEE – 400
+
+Jika berat < berat target → kalori = TDEE + 400
+
+Jika BMI > 25 → rekomendasikan olahraga intensitas sedang
+
+Jika aktivitas rendah → sarankan aktivitas ringan (walk 30 min)
+
+Kategorisasi Makanan
+
+Makanan tinggi protein untuk yang ingin naik massa otot
+
+Makanan rendah kalori untuk defisit
+
+Machine learning belum wajib untuk MVP.
+
+📌 4. Halaman yang Wajib Ada
+
+Landing Page
+
+Judul
+
+Deskripsi sistem
+
+Tombol “Hitung Kebutuhan Kalori”
+
+Halaman Input Data
+
+Halaman Hasil
+
+Kalori harian
+
+Rekomendasi makanan
+
+Rekomendasi aktivitas
+
+Admin Panel (opsional, jika MVP developer use)
+
+Tambah/edit makanan
+
+Tambah/edit aktivitas
+
+🧪 5. Kriteria MVP Sukses
+
+Pengguna bisa mengisi data diri
+
+Sistem mengeluarkan jumlah kalori per hari
+
+Pengguna mendapatkan rekomendasi makanan & aktivitas
+
+Rekomendasi sesuai tujuan (naik/turun/pertahankan BB)
+
+Waktu proses cepat dan mudah digunakan
+
+🎁 6. Bonus (Opsional Jika Ada Waktu)
+
+Login & history tracking
+
+Grafik progress
+
+Rekomendasi otomatis sesuai preferensi makanan
+
+Chatbot assist diet
+
+Upload foto makanan (AI calorie estimation – advanced)

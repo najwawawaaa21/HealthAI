@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistem Cerdas Penghitung Kalori Harian</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script src="https://cdn.lordicon.com/lordicon.js"></script>
+<style>
+:root{--primary:#0A6CF1;--secondary:#0F8BFF;--accent:#E9F3FF;--bg:#FFFFFF;--text:#1A1A1A;--shadow:0 8px 24px rgba(10,108,241,0.15);--soft:0 4px 16px rgba(10,108,241,0.12);--radius:22px}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:linear-gradient(180deg,#F6FAFF 0%,#EFF7FF 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.container{max-width:1200px;margin:0 auto;padding:28px}
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding:10px 14px;background:rgba(255,255,255,.6);backdrop-filter:blur(10px);border-radius:16px;box-shadow:0 6px 18px rgba(10,108,241,0.08)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--secondary));box-shadow:var(--soft)}
+.brand-name{font-family:Poppins;font-weight:700;letter-spacing:.2px}
+.nav-actions{display:flex;gap:10px}
+.btn{appearance:none;border:none;padding:12px 18px;border-radius:14px;font-weight:600;cursor:pointer;transition:.25s;background:var(--primary);color:#fff;box-shadow:var(--soft)}
+.btn.secondary{background:#fff;color:var(--primary);border:1px solid #cfe2ff}
+.btn.ghost{background:transparent;color:var(--primary)}
+.btn.full{width:100%}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+.loader{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);z-index:100}
+.section{display:none}
+.section.active{display:block}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;padding:26px;background:linear-gradient(135deg,#0A6CF1 0%,#0F8BFF 100%);color:#fff;border-radius:26px;box-shadow:var(--shadow)}
+.hero{position:relative;overflow:hidden}
+.hero h1{font-family:Poppins;font-weight:700;margin:0 0 8px 0}
+.hero p{opacity:.92;margin:0 0 18px 0}
+.hero-actions{display:flex;gap:12px}
+.hero-ill{position:relative;height:240px}
+.blob{position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 40%,rgba(255,255,255,.35) 0%,rgba(255,255,255,0) 100%)}
+.float{animation:float 6s ease-in-out infinite}
+.hero::before{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.35),transparent);filter:blur(6px)}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.feature{padding:18px;display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center}
+.icon{width:56px;height:56px;border-radius:18px;background:linear-gradient(180deg,#e9f3ff,#ffffff);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:24px}
+.section-title{font-family:Poppins;font-weight:700;margin:24px 0 12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-card{padding:22px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form .field{display:flex;flex-direction:column;gap:6px}
+.label{font-size:13px;color:#3b5c92}
+.input,.select{border:1px solid #d6e4ff;border-radius:14px;padding:12px;background:#fff;outline:none}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.summary .item{padding:18px;text-align:center}
+.summary .value{font-family:Poppins;font-size:22px;font-weight:700;color:var(--primary)}
+.gauge{display:flex;align-items:center;justify-content:center}
+.gauge-ring{width:140px;height:140px;border-radius:50%;background:conic-gradient(#4c86ff 0deg,#4c86ff 0deg,#e6efff 0deg,#e6efff 360deg);position:relative;box-shadow:var(--soft)}
+.gauge-ring::after{content:"";position:absolute;inset:16px;border-radius:50%;background:#fff}
+.gauge-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Poppins;font-weight:700;color:var(--primary)}
+.rec-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.list{padding:18px}
+.list h3{margin:0 0 10px 0;font-family:Poppins}
+.list .row{display:flex;justify-content:space-between;padding:10px;border-radius:12px;background:#f7fbff;margin-bottom:10px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#f0f6ff;color:#1b4bd6;font-weight:600}
+.seg{display:flex;gap:8px;margin-top:8px}
+.seg button{flex:1;border:1px solid #cfe2ff;background:#fff;color:#0A6CF1;border-radius:999px;padding:8px 10px;font-weight:600;cursor:pointer}
+.seg button.active{background:linear-gradient(135deg,#0A6CF1,#0F8BFF);color:#fff}
+.range{appearance:none;width:100%;height:10px;border-radius:999px;background:#e6efff;outline:none}
+.range::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0A6CF1,#0F8BFF);box-shadow:0 4px 10px rgba(10,108,241,.25)}
+.copy-btn{margin-top:12px}
+.search{display:grid;grid-template-columns:1fr auto;gap:10px;margin:10px 0}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pie{width:200px;height:200px;border-radius:50%;background:conic-gradient(#4c86ff 0deg,#4c86ff 0deg,#7fb3ff 0deg,#7fb3ff 0deg,#a6ccff 0deg,#a6ccff 360deg);box-shadow:var(--soft);margin:auto}
+.bars{padding:18px}
+.bar{height:12px;border-radius:999px;background:#e6efff;overflow:hidden;margin:8px 0}
+.bar > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4c86ff,#7fb3ff)}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;text-align:left;border-bottom:1px solid #eef3ff}
+.sidebar{width:240px;background:#0c2a68;color:#fff;border-radius:22px;padding:18px}
+.dashboard{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.menu a{display:block;color:#cfe0ff;text-decoration:none;padding:10px 12px;border-radius:12px}
+.menu a.active{background:#143b88;color:#fff}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{padding:14px;text-align:center}
+.hidden{display:none}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(10,108,241,0.2)}
+.card{transition:.25s}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(10,108,241,0.18)}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+body.dark{--bg:#0e1424;--text:#eaf1ff}
+body.dark{background:linear-gradient(180deg,#0e1424 0%,#0b1220 100%)}
+body.dark .card{background:#0f1a33;border:1px solid #1e2a4a}
+body.dark .nav{background:rgba(16,26,51,.6)}
+body.dark .btn.secondary{background:#0f1a33;color:#cfe2ff;border-color:#253459}
+body.dark .input,body.dark .select{background:#0f1a33;border-color:#253459;color:#eaf1ff}
+body.dark .label{color:#96a9d9}
+body.dark .section-title{color:#eaf1ff}
+body.dark .list .row{background:#162443;color:#eaf1ff;border:1px solid #24365f}
+body.dark .pill{background:#1a2f59;color:#eaf1ff;border:1px solid #2a4a86}
+body.dark .table th,body.dark .table td{color:#eaf1ff;border-bottom:1px solid #1f2d4e}
+body.dark .menu a{color:#9fb7ff}
+body.dark .menu a.active{background:#17336b;color:#fff}
+body.dark ::placeholder{color:#9ab0df}
+body.dark .bar{background:#1e2a4a}
+body.dark .gauge-ring::after{background:#0f1a33}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.features{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.rec-grid{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.dashboard{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="nav">
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <div class="brand-name">HealthAI</div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn ghost" id="toggleTheme">Tema</button>
+      <button class="btn ghost" data-nav="landing">Beranda</button>
+      <button class="btn ghost" data-nav="input">Input Data</button>
+      <button class="btn ghost" data-nav="result">Hasil</button>
+      <button class="btn ghost" data-nav="admin">Admin</button>
+    </div>
+  </div>
+
+  <section id="landing" class="section active">
+    <div class="hero card">
+      <div>
+        <h1>Hitung Kebutuhan Kalori Anda dengan Sistem Cerdas</h1>
+        <p>Dapatkan rekomendasi makanan dan aktivitas untuk mencapai berat badan ideal Anda.</p>
+        <div class="hero-actions">
+          <button class="btn" data-nav="input">Mulai Hitung</button>
+          <button class="btn secondary" id="pelajari">Pelajari Sistem</button>
+        </div>
+      </div>
+      <div class="hero-ill">
+        <div class="blob"></div>
+        <lottie-player id="heroAnim" class="float" src="https://assets8.lottiefiles.com/packages/lf20_eonsilkm.json" background="transparent" speed="1" loop autoplay style="position:absolute;right:12px;bottom:10px;width:220px;height:220px"></lottie-player>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature card">
+        <div class="icon"><lord-icon src="https://cdn.lordicon.com/fttvwdlw.json" trigger="hover" colors="primary:#0A6CF1,secondary:#0F8BFF" style="width:40px;height:40px"></lord-icon></div>
+        <div>
+          <div class="section-title" style="margin:0">Perhitungan Akurat</div>
+          <div>Dihitung menggunakan algoritma berbasis BMR dan TDEE.</div>
+        </div>
+      </div>
+      <div class="feature card">
+        <div class="icon"><lord-icon src="https://cdn.lordicon.com/fttvwdlw.json" trigger="hover" colors="primary:#0A6CF1,secondary:#0F8BFF" style="width:40px;height:40px"></lord-icon></div>
+        <div>
+          <div class="section-title" style="margin:0">Rekomendasi Makanan</div>
+          <div>Menu sehat sesuai kalori dan tujuan Anda.</div>
+        </div>
+      </div>
+      <div class="feature card">
+        <div class="icon"><lord-icon src="https://cdn.lordicon.com/fttvwdlw.json" trigger="hover" colors="primary:#0A6CF1,secondary:#0F8BFF" style="width:40px;height:40px"></lord-icon></div>
+        <div>
+          <div class="section-title" style="margin:0">Saran Aktivitas</div>
+          <div>Olahraga terbaik untuk menaikkan atau menurunkan berat badan.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="input" class="section">
+    <div class="grid">
+      <div class="form-card card">
+        <div class="section-title">Masukkan Data Tubuh Anda</div>
+        <div class="form">
+          <div class="field">
+            <label class="label">Umur</label>
+            <input id="age" type="number" class="input" placeholder="tahun" value="25">
+          </div>
+          <div class="field">
+            <label class="label">Jenis Kelamin</label>
+            <select id="sex" class="select">
+              <option value="male">Pria</option>
+              <option value="female">Wanita</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label">Berat Badan (kg)</label>
+            <input id="weight" type="number" class="input" value="70">
+          </div>
+          <div class="field">
+            <label class="label">Tinggi Badan (cm)</label>
+            <input id="height" type="number" class="input" value="170">
+          </div>
+          <div class="field">
+            <label class="label">Level Aktivitas</label>
+            <select id="activity" class="select">
+              <option value="sedentary">Sedentary</option>
+              <option value="light">Ringan</option>
+              <option value="moderate">Sedang</option>
+              <option value="heavy">Berat</option>
+            </select>
+            <input id="activityRange" class="range" type="range" min="0" max="3" value="0">
+            <div class="pill" id="activityLabel">Sedentary</div>
+          </div>
+          <div class="field">
+            <label class="label">Tujuan</label>
+            <select id="goal" class="select">
+              <option value="maintain">Pertahankan</option>
+              <option value="loss">Turun BB</option>
+              <option value="gain">Naik BB</option>
+            </select>
+            <div class="seg">
+              <button data-goal="maintain" class="active">Pertahankan</button>
+              <button data-goal="loss">Turun</button>
+              <button data-goal="gain">Naik</button>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Berat Target (opsional)</label>
+            <input id="targetWeight" type="number" class="input" placeholder="kg">
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <button id="calc" class="btn full">Hitung Kalori</button>
+        </div>
+      </div>
+      <div class="card" style="padding:22px;display:grid;grid-template-rows:auto auto 1fr;gap:10px">
+        <div class="section-title">Pratinjau</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="item card" style="padding:12px"><div>BMR</div><div id="previewBmr" class="value">0</div></div>
+          <div class="item card" style="padding:12px"><div>TDEE</div><div id="previewTdee" class="value">0</div></div>
+        </div>
+        <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_3rwasyjy.json" background="transparent" speed="1" loop autoplay style="width:100%;height:180px"></lottie-player>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="pill">BMR dan TDEE otomatis</div>
+          <div class="pill">Makronutrisi disesuaikan</div>
+          <div class="pill">Rekomendasi makanan & aktivitas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="section">
+    <div id="celebrate" class="card" style="display:none;padding:8px;text-align:center">
+      <lottie-player id="confetti" src="https://assets1.lottiefiles.com/packages/lf20_ISbOsd.json" background="transparent" speed="1" style="width:240px;height:140px"></lottie-player>
+    </div>
+    <div class="summary">
+      <div class="item card">
+        <div>Kalori Harian (TDEE)</div>
+        <div id="tdeeVal" class="value">0</div>
+      </div>
+      <div class="item card">
+        <div>Target Kalori</div>
+        <div id="targetVal" class="value">0</div>
+      </div>
+      <div class="item card">
+        <div>Makronutrisi</div>
+        <div id="macroVal" class="value">P 0g • L 0g • K 0g</div>
+      </div>
+      <div class="item card">
+        <div>Target vs TDEE</div>
+        <div class="gauge" style="padding:8px;position:relative">
+          <div id="gaugeRing" class="gauge-ring"><div id="gaugeLabel" class="gauge-label">0%</div></div>
+        </div>
+      </div>
+      <div class="item card">
+        <div>Waktu Capaian</div>
+        <div id="timeVal" class="value">-</div>
+        <div id="timeDetail" style="margin-top:6px;font-size:12px;color:#3b5c92">Isi berat target pada Input Data</div>
+      </div>
+    </div>
+    <div class="rec-grid" style="margin-top:18px">
+      <div class="list card">
+        <h3>Rekomendasi Makanan</h3>
+        <div id="foodList"></div>
+      </div>
+      <div class="list card">
+        <h3>Rekomendasi Aktivitas</h3>
+        <div id="activityList"></div>
+      </div>
+    </div>
+    <div class="chart-row" style="margin-top:18px">
+      <div class="card" style="padding:18px;text-align:center">
+        <div class="section-title" style="margin:0 0 10px 0">Pie Nutrisi</div>
+        <div id="pie" class="pie"></div>
+      </div>
+      <div class="card bars">
+        <div class="section-title" style="margin:0 0 8px 0">Calorie Breakdown</div>
+        <div>Protein</div>
+        <div class="bar"><span id="barProtein" style="width:0%"></span></div>
+        <div>Lemak</div>
+        <div class="bar"><span id="barFat" style="width:0%"></span></div>
+        <div>Karbohidrat</div>
+        <div class="bar"><span id="barCarb" style="width:0%"></span></div>
+        <button id="copySummary" class="btn copy-btn">Salin Ringkasan</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="admin" class="section">
+    <div class="dashboard">
+      <div class="sidebar">
+        <div style="font-weight:700;margin-bottom:10px">HealthAI</div>
+        <div class="menu">
+          <a class="active">Dashboard</a>
+          <a>Makanan</a>
+          <a>Aktivitas</a>
+          <a>Pengguna</a>
+        </div>
+      </div>
+      <div>
+        <div class="stat-grid">
+          <div class="card stat"><div>Total Makanan</div><div id="statFood" class="value">0</div></div>
+          <div class="card stat"><div>Total Aktivitas</div><div id="statAct" class="value">0</div></div>
+          <div class="card stat"><div>Pengguna</div><div class="value">1</div></div>
+        </div>
+        <div class="card list">
+          <h3>Data Makanan</h3>
+          <div class="search"><input id="searchFood" class="input" placeholder="Cari makanan..."><button id="clearFood" class="btn secondary">Bersihkan</button></div>
+          <table class="table" id="foodTable"></table>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-top:10px">
+            <input id="newFoodName" class="input" placeholder="Nama">
+            <input id="newFoodCal" class="input" placeholder="Kalori">
+            <select id="newFoodCat" class="select"><option value="Sarapan">Sarapan</option><option value="Makan Siang">Makan Siang</option><option value="Makan Malam">Makan Malam</option><option value="Camilan">Camilan</option></select>
+            <button id="addFood" class="btn">Tambah</button>
+          </div>
+        </div>
+        <div class="card list" style="margin-top:14px">
+          <h3>Data Aktivitas</h3>
+          <div class="search"><input id="searchAct" class="input" placeholder="Cari aktivitas..."></div>
+          <table class="table" id="actTable"></table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="loader" class="loader">
+  <div class="card" style="padding:20px">
+    <div style="margin-bottom:8px;text-align:center;font-family:Poppins;font-weight:600;color:#0A6CF1">Memproses</div>
+    <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_x62chJ.json" background="transparent" speed="1" loop autoplay style="width:140px;height:140px"></lottie-player>
+  </div>
+</div>
+
+<script>
+const theme={primary:'#0A6CF1',secondary:'#0F8BFF',accent:'#E9F3FF',background:'#FFFFFF',text:'#1A1A1A'}
+const foods=[
+ {name:'Oatmeal + Pisang',cal:280,cat:'Sarapan'},
+ {name:'Telur Orak-arik',cal:220,cat:'Sarapan'},
+ {name:'Yogurt Greek',cal:150,cat:'Sarapan'},
+ {name:'Nasi + Ayam Panggang',cal:520,cat:'Makan Siang'},
+ {name:'Salad Ayam',cal:380,cat:'Makan Siang'},
+ {name:'Sarden + Roti',cal:420,cat:'Makan Siang'},
+ {name:'Nasi + Ikan Bakar',cal:500,cat:'Makan Malam'},
+ {name:'Tumis Sayur + Tahu',cal:360,cat:'Makan Malam'},
+ {name:'Sup Tomat + Roti',cal:330,cat:'Makan Malam'},
+ {name:'Apel',cal:95,cat:'Camilan'},
+ {name:'Kacang Almond 30g',cal:170,cat:'Camilan'},
+ {name:'Roti Gandum',cal:130,cat:'Camilan'},
+ {name:'Smoothie Buah',cal:210,cat:'Camilan'},
+ {name:'Nasi Merah + Tempe',cal:480,cat:'Makan Siang'},
+ {name:'Ikan Salmon',cal:320,cat:'Makan Malam'},
+ {name:'Sop Ayam',cal:310,cat:'Makan Malam'}
+]
+const activities=[
+ {name:'Jalan cepat',MET:3.8},
+ {name:'Jogging',MET:7.0},
+ {name:'Bersepeda',MET:6.0},
+ {name:'Workout ringan',MET:4.0},
+ {name:'Yoga',MET:3.0}
+]
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.nav)))
+document.getElementById('pelajari').addEventListener('click',()=>alert('Menggunakan BMR Mifflin-St Jeor, TDEE berdasarkan aktivitas, dan rekomendasi berbasis aturan sederhana.'))
+function bmr(sex,w,h,a){return sex==='male'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161}
+function actMult(level){if(level==='sedentary')return 1.2;if(level==='light')return 1.375;if(level==='moderate')return 1.55;return 1.725}
+function macros(cal,weight){const proteinG=Math.round(weight*1.5);const fatCal=Math.round(cal*0.25);const fatG=Math.round(fatCal/9);const protCal=proteinG*4;const carbCal=cal-protCal-fatCal;const carbG=Math.max(0,Math.round(carbCal/4));return {proteinG,fatG,carbG,protCal,fatCal,carbCal}}
+function goalTarget(tdee,goal,weight,target){if(goal==='maintain')return Math.round(tdee);if(goal==='loss')return Math.round(tdee-400);if(goal==='gain')return Math.round(tdee+400);if(target&&weight<target)return Math.round(tdee+400);return Math.round(tdee)}
+function bmi(w,h){const m=h/100;return w/(m*m)}
+function recommendFoods(goal){const out={Sarapan:[],"Makan Siang":[],"Makan Malam":[],Camilan:[]};foods.forEach(f=>{if(goal==='loss'&&f.cal<=400||goal==='gain'&&f.cal>=350||goal==='maintain'){out[f.cat].push(f)}});return out}
+function caloriesBurned(MET,weight,minutes){return Math.round(MET*3.5*weight/200*minutes)}
+function recommendActivities(goal,bmiVal,weight){const list=[];activities.forEach(a=>{let minutes=30;if(goal==='loss')minutes=40;if(goal==='gain')minutes=25;if(bmiVal>25&&a.MET>=6)minutes=30;list.push({name:a.name,duration:minutes,cal:caloriesBurned(a.MET,weight,minutes)})});return list}
+function renderFoods(group){const wrap=document.getElementById('foodList');wrap.innerHTML='';Object.keys(group).forEach(cat=>{const header=document.createElement('div');header.className='pill';header.textContent=cat;wrap.appendChild(header);group[cat].slice(0,4).forEach(item=>{const row=document.createElement('div');row.className='row';row.innerHTML=`<div>${item.name}</div><div>${item.cal} kcal</div>`;wrap.appendChild(row)})})}
+function renderActivities(list){const wrap=document.getElementById('activityList');wrap.innerHTML='';list.forEach(x=>{const row=document.createElement('div');row.className='row';row.innerHTML=`<div>${x.name}</div><div>${x.duration} menit • ${x.cal} kcal</div>`;wrap.appendChild(row)})}
+function renderCharts(m){const total=m.protCal+m.fatCal+m.carbCal;const p=Math.round(m.protCal/total*360);const f=Math.round(m.fatCal/total*360);const c=360-p-f;document.getElementById('pie').style.background=`conic-gradient(#4c86ff 0 ${p}deg,#7fb3ff ${p}deg ${p+f}deg,#a6ccff ${p+f}deg 360deg)`;document.getElementById('barProtein').style.width=Math.round(m.protCal/total*100)+'%';document.getElementById('barFat').style.width=Math.round(m.fatCal/total*100)+'%';document.getElementById('barCarb').style.width=Math.round(m.carbCal/total*100)+'%'}
+function animateNumber(el,to){const start=parseInt(el.textContent)||0;const diff=to-start;const dur=700;const t0=performance.now();function step(ts){const p=Math.min(1,(ts-t0)/dur);el.textContent=Math.round(start+diff*p);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
+function renderSummary(tdee,target,m){animateNumber(document.getElementById('tdeeVal'),Math.round(tdee));animateNumber(document.getElementById('targetVal'),Math.round(target));document.getElementById('macroVal').textContent=`P ${m.proteinG}g • L ${m.fatG}g • K ${m.carbG}g`;renderGauge(tdee,target)}
+function renderTime(weight,targetWeight,tdee,target){const tv=document.getElementById('timeVal');const td=document.getElementById('timeDetail');if(!targetWeight){tv.textContent='-';td.textContent='Isi berat target pada Input Data';return}const delta=Math.abs(targetWeight-weight);const diff=Math.abs(tdee-target);if(diff<1||delta<0.01){tv.textContent='0 hari';td.textContent='Tidak ada perubahan target';return}const dailyKg=diff/7700;const weeks=delta/(dailyKg*7);const days=Math.max(1,Math.round(weeks*7));tv.textContent=`≈ ${Math.ceil(weeks*10)/10} minggu`;td.textContent=`Selisih energi harian ${Math.round(diff)} kcal • ≈ ${days} hari`}
+function renderGauge(tdee,target){const ring=document.getElementById('gaugeRing');const label=document.getElementById('gaugeLabel');if(!ring||!label)return;const ratio=Math.max(0,Math.min(1,target/Math.max(1,tdee)));const deg=Math.round(ratio*360);ring.style.background=`conic-gradient(#4c86ff 0 ${deg}deg,#e6efff ${deg}deg 360deg)`;label.textContent=`${Math.round(ratio*100)}%`}
+function fillAdmin(){document.getElementById('statFood').textContent=foods.length;document.getElementById('statAct').textContent=activities.length;const ft=document.getElementById('foodTable');ft.innerHTML='<tr><th>Nama</th><th>Kalori</th><th>Kategori</th><th>Aksi</th></tr>'+foods.map((f,i)=>`<tr data-i="${i}"><td>${f.name}</td><td>${f.cal}</td><td>${f.cat}</td><td><button class='btn secondary' data-del='${i}'>Hapus</button></td></tr>`).join('');bindDelete();const at=document.getElementById('actTable');at.innerHTML='<tr><th>Nama</th><th>MET</th></tr>'+activities.map(a=>`<tr><td>${a.name}</td><td>${a.MET}</td></tr>`).join('')}
+document.getElementById('addFood').addEventListener('click',()=>{const n=document.getElementById('newFoodName').value.trim();const c=parseInt(document.getElementById('newFoodCal').value);const cat=document.getElementById('newFoodCat').value;if(n&&c){foods.push({name:n,cal:c,cat});fillAdmin()}})
+document.getElementById('calc').addEventListener('click',()=>{
+  const age=parseInt(document.getElementById('age').value);const sex=document.getElementById('sex').value;const weight=parseFloat(document.getElementById('weight').value);const height=parseFloat(document.getElementById('height').value);const activity=document.getElementById('activity').value;const goal=document.getElementById('goal').value;const tw=document.getElementById('targetWeight').value?parseFloat(document.getElementById('targetWeight').value):null;
+  const base=bmr(sex,weight,height,age);const tdee=base*actMult(activity);const target=goalTarget(tdee,goal,weight,tw);const m=macros(target,weight);const bmiVal=bmi(weight,height);
+  const ld=document.getElementById('loader');ld.style.display='flex';setTimeout(()=>{ld.style.display='none';renderSummary(tdee,target,m);renderFoods(recommendFoods(goal));const acts=recommendActivities(goal,bmiVal,weight);renderActivities(acts);renderCharts(m);renderTime(weight,tw,tdee,target);showSection('result');const cel=document.getElementById('celebrate');cel.style.display='block';const conf=document.getElementById('confetti');if(conf&&conf.play){conf.play()}setTimeout(()=>{cel.style.display='none'},1400)},600)
+})
+document.getElementById('toggleTheme').addEventListener('click',()=>{document.body.classList.toggle('dark')})
+function updatePreview(){const age=parseInt(document.getElementById('age').value||0);const sex=document.getElementById('sex').value;const weight=parseFloat(document.getElementById('weight').value||0);const height=parseFloat(document.getElementById('height').value||0);const activity=document.getElementById('activity').value;const base=bmr(sex,weight,height,age);const tdee=base*actMult(activity);document.getElementById('previewBmr').textContent=Math.round(base)||0;document.getElementById('previewTdee').textContent=Math.round(tdee)||0}
+['age','sex','weight','height','activity','goal','targetWeight'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updatePreview)});updatePreview()
+const segBtns=document.querySelectorAll('.seg button');segBtns.forEach(b=>b.addEventListener('click',()=>{segBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('goal').value=b.dataset.goal}))
+const labels=['sedentary','light','moderate','heavy'];
+const labelText=['Sedentary','Ringan','Sedang','Berat'];
+const range=document.getElementById('activityRange');const sel=document.getElementById('activity');const lab=document.getElementById('activityLabel');range.addEventListener('input',()=>{sel.value=labels[parseInt(range.value)];lab.textContent=labelText[parseInt(range.value)];updatePreview()});sel.addEventListener('change',()=>{const idx=labels.indexOf(sel.value);range.value=idx;lab.textContent=labelText[idx];updatePreview()});
+document.getElementById('copySummary').addEventListener('click',()=>{const tdee=document.getElementById('tdeeVal').textContent;const target=document.getElementById('targetVal').textContent;const macro=document.getElementById('macroVal').textContent;const s=`TDEE ${tdee}\nTarget ${target}\n${macro}`;navigator.clipboard.writeText(s)})
+document.getElementById('searchFood').addEventListener('input',(e)=>{const q=e.target.value.toLowerCase();const ft=document.getElementById('foodTable');ft.innerHTML='<tr><th>Nama</th><th>Kalori</th><th>Kategori</th><th>Aksi</th></tr>'+foods.map((f,i)=>({f,i})).filter(x=>x.f.name.toLowerCase().includes(q)||String(x.f.cal).includes(q)||x.f.cat.toLowerCase().includes(q)).map(x=>`<tr data-i="${x.i}"><td>${x.f.name}</td><td>${x.f.cal}</td><td>${x.f.cat}</td><td><button class='btn secondary' data-del='${x.i}'>Hapus</button></td></tr>`).join('');bindDelete()});
+document.getElementById('clearFood').addEventListener('click',()=>{document.getElementById('searchFood').value='';fillAdmin()});
+function bindDelete(){document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{const idx=parseInt(b.getAttribute('data-del'));foods.splice(idx,1);fillAdmin()}))}
+document.getElementById('searchAct').addEventListener('input',(e)=>{const q=e.target.value.toLowerCase();const at=document.getElementById('actTable');at.innerHTML='<tr><th>Nama</th><th>MET</th></tr>'+activities.filter(a=>a.name.toLowerCase().includes(q)||String(a.MET).includes(q)).map(a=>`<tr><td>${a.name}</td><td>${a.MET}</td></tr>`).join('')});
+fillAdmin()
+</script>
+</body>
+</html>

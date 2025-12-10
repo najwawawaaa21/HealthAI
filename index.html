@@ -11,7 +11,7 @@
 :root{--primary:#0A6CF1;--secondary:#0F8BFF;--accent:#E9F3FF;--bg:#FFFFFF;--text:#1A1A1A;--shadow:0 8px 24px rgba(10,108,241,0.15);--soft:0 4px 16px rgba(10,108,241,0.12);--radius:22px}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:linear-gradient(180deg,#F6FAFF 0%,#EFF7FF 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+body{margin:0;background:linear-gradient(180deg,#F6FAFF 0%,#EFF7FF 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;overflow-x:hidden}
 .container{max-width:1200px;margin:0 auto;padding:28px}
 .nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding:10px 14px;background:rgba(255,255,255,.6);backdrop-filter:blur(10px);border-radius:16px;box-shadow:0 6px 18px rgba(10,108,241,0.08)}
 .brand{display:flex;align-items:center;gap:12px}
@@ -24,6 +24,11 @@ body{margin:0;background:linear-gradient(180deg,#F6FAFF 0%,#EFF7FF 100%);color:v
 .btn.full{width:100%}
 .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
 .loader{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);z-index:100}
+.menu{width:42px;height:42px;padding:0;border-radius:12px;display:none;align-items:center;justify-content:center;font-size:22px}
+.dropdown{position:fixed;right:12px;top:70px;background:#fff;border:1px solid #d6e4ff;border-radius:16px;box-shadow:0 14px 34px rgba(10,108,241,.18);display:none;min-width:180px;overflow:hidden}
+.dropdown.open{display:block}
+.dropdown a,.dropdown button{display:block;width:100%;text-align:left;padding:12px 14px;background:#fff;border:none;color:#1A1A1A;font-weight:600;cursor:pointer}
+.dropdown a:hover,.dropdown button:hover{background:#f1f6ff}
 .section{display:none}
 .section.active{display:block}
 .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;padding:26px;background:linear-gradient(135deg,#0A6CF1 0%,#0F8BFF 100%);color:#fff;border-radius:26px;box-shadow:var(--shadow)}
@@ -53,7 +58,7 @@ body{margin:0;background:linear-gradient(180deg,#F6FAFF 0%,#EFF7FF 100%);color:v
 .gauge-ring::after{content:"";position:absolute;inset:16px;border-radius:50%;background:#fff}
 .gauge-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Poppins;font-weight:700;color:var(--primary)}
 .rec-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
-.list{padding:18px}
+.list{padding:18px;overflow-x:auto}
 .list h3{margin:0 0 10px 0;font-family:Poppins}
 .list .row{display:flex;justify-content:space-between;padding:10px;border-radius:12px;background:#f7fbff;margin-bottom:10px}
 .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#f0f6ff;color:#1b4bd6;font-weight:600}
@@ -72,7 +77,7 @@ body{margin:0;background:linear-gradient(180deg,#F6FAFF 0%,#EFF7FF 100%);color:v
 .table{width:100%;border-collapse:collapse}
 .table th,.table td{padding:10px;text-align:left;border-bottom:1px solid #eef3ff}
 .sidebar{width:240px;background:#0c2a68;color:#fff;border-radius:22px;padding:18px}
-.dashboard{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.dashboard{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
 .menu a{display:block;color:#cfe0ff;text-decoration:none;padding:10px 12px;border-radius:12px}
 .menu a.active{background:#143b88;color:#fff}
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
@@ -98,7 +103,29 @@ body.dark .menu a.active{background:#17336b;color:#fff}
 body.dark ::placeholder{color:#9ab0df}
 body.dark .bar{background:#1e2a4a}
 body.dark .gauge-ring::after{background:#0f1a33}
-@media(max-width:900px){.hero{grid-template-columns:1fr}.features{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.rec-grid{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.dashboard{grid-template-columns:1fr}}
+body.dark .dropdown{background:#0f1a33;border-color:#253459}
+body.dark .dropdown a,body.dark .dropdown button{background:#0f1a33;color:#eaf1ff}
+body.dark .dropdown a:hover,body.dark .dropdown button:hover{background:#162443}
+@media(max-width:900px){
+  .container{padding:16px}
+  .hero{grid-template-columns:1fr}
+  .features{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .summary{grid-template-columns:1fr}
+  .rec-grid{grid-template-columns:1fr}
+  .chart-row{grid-template-columns:1fr}
+  .dashboard{grid-template-columns:1fr;gap:12px}
+  .sidebar{width:100%;padding:12px;border-radius:16px}
+  .sidebar > div:first-child{font-size:14px;margin-bottom:8px}
+  .menu{display:flex;flex-wrap:wrap;gap:8px}
+  .menu a{flex:1 1 calc(50% - 8px);text-align:center;padding:8px 10px;font-size:14px}
+  .stat-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .menu a{flex:1 1 100%}
+  .stat-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){.nav-actions{display:none}.menu{display:flex}}
 </style>
 </head>
 <body>
@@ -114,6 +141,14 @@ body.dark .gauge-ring::after{background:#0f1a33}
       <button class="btn ghost" data-nav="input">Input Data</button>
       <button class="btn ghost" data-nav="result">Hasil</button>
       <button class="btn ghost" data-nav="admin">Admin</button>
+    </div>
+    <button class="btn ghost menu" id="menuBtn">⋮</button>
+    <div id="menuDropdown" class="dropdown">
+      <button id="menuTheme">Tema</button>
+      <a data-nav="landing">Beranda</a>
+      <a data-nav="input">Input Data</a>
+      <a data-nav="result">Hasil</a>
+      <a data-nav="admin">Admin</a>
     </div>
   </div>
 
@@ -293,9 +328,7 @@ body.dark .gauge-ring::after{background:#0f1a33}
         <div style="font-weight:700;margin-bottom:10px">HealthAI</div>
         <div class="menu">
           <a class="active">Dashboard</a>
-          <a>Makanan</a>
-          <a>Aktivitas</a>
-          <a>Pengguna</a>
+        
         </div>
       </div>
       <div>
@@ -385,6 +418,7 @@ document.getElementById('calc').addEventListener('click',()=>{
   const ld=document.getElementById('loader');ld.style.display='flex';setTimeout(()=>{ld.style.display='none';renderSummary(tdee,target,m);renderFoods(recommendFoods(goal));const acts=recommendActivities(goal,bmiVal,weight);renderActivities(acts);renderCharts(m);renderTime(weight,tw,tdee,target);showSection('result');const cel=document.getElementById('celebrate');cel.style.display='block';const conf=document.getElementById('confetti');if(conf&&conf.play){conf.play()}setTimeout(()=>{cel.style.display='none'},1400)},600)
 })
 document.getElementById('toggleTheme').addEventListener('click',()=>{document.body.classList.toggle('dark')})
+const menuBtn=document.getElementById('menuBtn');const menu=document.getElementById('menuDropdown');menuBtn.addEventListener('click',()=>{menu.classList.toggle('open')});document.getElementById('menuTheme').addEventListener('click',()=>{document.body.classList.toggle('dark');menu.classList.remove('open')});menu.querySelectorAll('[data-nav]').forEach(x=>x.addEventListener('click',()=>{showSection(x.dataset.nav);menu.classList.remove('open')}));document.addEventListener('click',(e)=>{if(!menu.contains(e.target)&&e.target!==menuBtn){menu.classList.remove('open')}})
 function updatePreview(){const age=parseInt(document.getElementById('age').value||0);const sex=document.getElementById('sex').value;const weight=parseFloat(document.getElementById('weight').value||0);const height=parseFloat(document.getElementById('height').value||0);const activity=document.getElementById('activity').value;const base=bmr(sex,weight,height,age);const tdee=base*actMult(activity);document.getElementById('previewBmr').textContent=Math.round(base)||0;document.getElementById('previewTdee').textContent=Math.round(tdee)||0}
 ['age','sex','weight','height','activity','goal','targetWeight'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updatePreview)});updatePreview()
 const segBtns=document.querySelectorAll('.seg button');segBtns.forEach(b=>b.addEventListener('click',()=>{segBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('goal').value=b.dataset.goal}))
